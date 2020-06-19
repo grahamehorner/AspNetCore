@@ -36,7 +36,7 @@ namespace Microsoft.AspNetCore.Razor.Tasks
                 var source = input.GetMetadata("FullPath");
                 var output = input.GetMetadata("TargetPath");
 
-                if (SkipIfOutputIsNewer && File.Exists(source) && File.GetLastWriteTimeUtc(source) < File.GetLastWriteTimeUtc(output))
+                if (SkipIfOutputIsNewer && File.Exists(output) && File.GetLastWriteTimeUtc(source) < File.GetLastWriteTimeUtc(output))
                 {
                     Log.LogMessage(MessageImportance.Low, $"Skipping '{source}' because '{output}' is newer than '{source}'.");
                     continue;

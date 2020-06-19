@@ -38,6 +38,10 @@ Copyright (c) .NET Foundation. All rights reserved.
     <_BlazorSatelliteAssemblyCacheFile>$(IntermediateOutputPath)blazor.satelliteasm.props</_BlazorSatelliteAssemblyCacheFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <FrameworkReference Remove="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
   <!-- Temporary workaround until ILLink.targets are updated -->
   <PropertyGroup Condition=" '$(PublishTrimmed)' == 'true' ">
     <IntermediateLinkDir Condition=" '$(IntermediateLinkDir)' == '' ">$(IntermediateOutputPath)linked\</IntermediateLinkDir>
@@ -55,6 +59,8 @@ Copyright (c) .NET Foundation. All rights reserved.
     <ItemGroup>
       <_BlazorJSFile Include="$(BlazorWebAssemblyJSPath)" />
       <_BlazorJSFile Include="$(BlazorWebAssemblyJSMapPath)" Condition="Exists('$(BlazorWebAssemblyJSMapPath)')" />
+
+      <_BlazorConfigFile Include="wwwroot\appsettings*.json" />
 
       <!-- Clear out temporary build artifacts that the runtime packages -->
       <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.a'" />
@@ -168,15 +174,13 @@ Copyright (c) .NET Foundation. All rights reserved.
       LinkerEnabled="false"
       CacheBootResources="$(BlazorCacheBootResources)"
       OutputPath="$(_BlazorBuildBootJsonPath)"
-      ConfigurationFiles="$(_BlazorConfigFile)" />
+      ConfigurationFiles="@(_BlazorConfigFile)" />
 
     <ItemGroup>
       <FileWrites Include="$(OutDir)$(_BlazorOutputPath)blazor.boot.json" />
     </ItemGroup>
 
     <ItemGroup>
-      <_BlazorConfigFile Include="wwwroot\appsettings*.json" />
-
       <_BlazorWebAssemblyStaticWebAsset Include="$(_BlazorBuildBootJsonPath)">
         <SourceId>$(PackageId)</SourceId>
         <SourceType></SourceType>
@@ -356,7 +360,7 @@ Copyright (c) .NET Foundation. All rights reserved.
       LinkerEnabled="$(PublishTrimmed)"
       CacheBootResources="$(BlazorCacheBootResources)"
       OutputPath="$(IntermediateOutputPath)blazor.publish.boot.json"
-      ConfigurationFiles="$(_BlazorConfigFile)" />
+      ConfigurationFiles="@(_BlazorConfigFile)" />
 
     <ItemGroup>
       <ResolvedFileToPublish

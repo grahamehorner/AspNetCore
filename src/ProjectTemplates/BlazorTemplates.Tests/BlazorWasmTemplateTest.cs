@@ -457,8 +457,6 @@ namespace Templates.Test
                 ErrorMessages.GetFailedProcessMessageOrEmpty("Run built project", project, aspNetProcess.Process));
 
             await aspNetProcess.AssertStatusCode("/", HttpStatusCode.OK, "text/html");
-            // We only do brotli precompression for published apps
-            await AssertCompressionFormat(aspNetProcess, "gzip");
             if (BrowserFixture.IsHostAutomationSupported())
             {
                 aspNetProcess.VisitInBrowser(Browser);
@@ -536,6 +534,8 @@ namespace Templates.Test
                 Browser.Equal(appName.Trim(), () => Browser.Title.Trim());
             }
 
+            // Skipping to workaround https://github.com/dotnet/runtime/issues/38154
+            skipFetchData = true;
             if (!skipFetchData)
             {
                 // Can navigate to the 'fetch data' page
